@@ -437,12 +437,12 @@
     <!-- INPUT CARD -->
     <div class="card">
       <div class="welcome">
-        Dear student, please enter your <span>Exam Number</span> and select one or more exams.
+        Dear student, please enter your <span>Emis Number</span> and select one or more exams.
       </div>
       <div class="form-grid">
         <div>
-          <label for="examNoInput">Exam Number</label>
-          <input id="examNoInput" type="text" placeholder="e.g. 8101" />
+          <label for="emisNoInput">Emis Number</label>
+          <input id="emisNoInput" type="text" placeholder="10 digits" />
         </div>
         <div>
           <label>Exams to Compare</label>
@@ -489,7 +489,8 @@
       "July",
       "August",
       "September",
-      "November",   // block 4 – when you add it
+      "November",
+      "December",   // block 5 – when you add it
     ];
     /*********************************************************/
 
@@ -555,7 +556,7 @@
       }
     }
 
-    // NEW: detect exam blocks wherever header label is "EXAM NO"
+    // NEW: detect exam blocks wherever header label is "Emis NO"
     function detectExamBlocks() {
       exams = [];
       const headers = sheetCols.map(h => (h || "").trim());
@@ -573,7 +574,7 @@
         const start = starts[bi];
         const end = (bi + 1 < starts.length ? starts[bi + 1] : headers.length) - 1;
 
-        let examNoIndex = start;
+        let emisNoIndex = start;
         let nameIndex = null;
         let totalIndex = null;
         const subjects = [];
