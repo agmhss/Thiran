@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Class 8A – Multi-Exam Result Viewer</title>
+  <title>Class 6 to 9 THIRAN – Multi-Exam Result Viewer</title>
   <style>
     :root {
       --primary: #2563eb;
@@ -422,10 +422,10 @@
       <div>
         <h1>
           <span class="logo">★</span>
-          AGMHSS PATTEESWARAM, Class 8A Result Dashboard
+          AGMHSS PATTEESWARAM, THIRAN Result Dashboard
         </h1>
         <div class="subtitle">
-          Welcome Class 8A Students! Enter your exam number and choose the exams to see your performance side-by-side.
+          Welcome Class 6 to 9 Students! Enter your EMIS number and choose the months to see your performance side-by-side.
         </div>
       </div>
       <div class="badge">
@@ -470,7 +470,7 @@
           </h2>
           <div class="student-meta">
             <span><strong>Name:</strong> <span id="studentName"></span></span>
-            <span><strong>Exam No:</strong> <span id="studentExamNo"></span></span>
+            <span><strong>Emis No:</strong> <span id="studentEmisNo"></span></span>
           </div>
           <div id="tableWrapper"></div>
         </div>
@@ -482,14 +482,14 @@
   <script>
     /******************* CONFIG – EDIT THIS *******************/
     const SHEET_ID   = "1RkGzPu3KkP5FRZqPMgmIYVbu2--y-NobJMpbNo-GgIc";   // ← paste only the ID, not the whole URL
-    const SHEET_NAME = "Marks";                // tab name
+    const SHEET_NAME = "Thiran";                // tab name
 
     // Exam display names by block order (block 4+ optional – you can add more)
     const EXAM_NAMES = [
-      "I Mid-Term",
-      "Quarterly",
-      "II Mid-Term",
-      "Half-Yearly",   // block 4 – when you add it
+      "July",
+      "August",
+      "September",
+      "November",   // block 4 – when you add it
     ];
     /*********************************************************/
 
@@ -510,7 +510,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       loadSheetData();
       showBtn.addEventListener("click", onShowClick);
-      examNoInput.addEventListener("keyup", (e) => {
+      emisNoInput.addEventListener("keyup", (e) => {
         if (e.key === "Enter") onShowClick();
       });
     });
@@ -547,7 +547,7 @@
         }
 
         buildExamOptions();
-        statusEl.textContent = "Ready. Enter your Exam Number and choose the exams.";
+        statusEl.textContent = "Ready. Enter your Emis Number and choose the exams.";
       } catch (err) {
         console.error(err);
         statusEl.textContent = "Error loading data. Check Sheet ID / publishing / sharing settings.";
@@ -562,7 +562,7 @@
       const starts = [];
 
       headers.forEach((lbl, idx) => {
-        if (lbl.toLowerCase().startsWith("exam no")) {
+        if (lbl.toLowerCase().startsWith("emis no")) {
           starts.push(idx);
         }
       });
@@ -603,7 +603,7 @@
           label: configuredName,
           startCol: start,
           endCol: end,
-          examNoIndex,
+          emisNoIndex,
           nameIndex,
           totalIndex,
           subjects
@@ -641,9 +641,9 @@
         return;
       }
 
-      const examNo = (examNoInput.value || "").trim();
-      if (!examNo) {
-        statusEl.textContent = "Please enter your Exam Number.";
+      const emisNo = (emisNoInput.value || "").trim();
+      if (!emisNo) {
+        statusEl.textContent = "Please enter your Emis Number.";
         resultArea.style.display = "none";
         launchStars(false);
         return;
@@ -668,7 +668,7 @@
 
       selectedExamIndexes.forEach(idx => {
         const exam = exams[idx];
-        const res = findStudentInExam(dataRows, exam, examNo);
+        const res = findStudentInExam(dataRows, exam, emisNo);
         if (res && !studentName && res.name) {
           studentName = res.name;
         }
@@ -687,8 +687,8 @@
       launchStars(true);
     }
 
-    function findStudentInExam(dataRows, exam, examNoInput) {
-      const examNoIdx = exam.examNoIndex;
+    function findStudentInExam(dataRows, exam, emisNoInput) {
+      const examNoIdx = exam.emisNoIndex;
       const nameIdx   = exam.nameIndex;
       const totalIdx  = exam.totalIndex;
       const subjects  = exam.subjects;
@@ -698,10 +698,10 @@
 
       for (let i = 0; i < dataRows.length; i++) {
         const row = dataRows[i];
-        const value = row[examNoIdx];
+        const value = row[emisNoIdx];
         if (value == null) continue;
-        const cellExamNo = String(value).trim();
-        if (cellExamNo === examNoInput) {
+        const cellEmisNo = String(value).trim();
+        if (cellEmisNo === emisNoInput) {
           studentRowIndex = i;
           studentRow = row;
           break;
@@ -722,21 +722,21 @@
         subjectMarks[sub.name] = (v != null ? v : "");
       });
 
-      const rank = calculateRankForExam(dataRows, exam, String(studentRow[examNoIdx]).trim(), totalRaw);
+      const rank = calculateRankForExam(dataRows, exam, String(studentRow[emisNoIdx]).trim(), totalRaw);
 
-      return { name, examNo: String(studentRow[examNoIdx]).trim(), total, subjectMarks, rank };
+      return { name, emisNo: String(studentRow[emisNoIdx]).trim(), total, subjectMarks, rank };
     }
 
-    function calculateRankForExam(dataRows, exam, studentExamNo, studentTotalRaw) {
+    function calculateRankForExam(dataRows, exam, studentEmisNo, studentTotalRaw) {
   const totalIdx = exam.totalIndex;
-  const examNoIdx = exam.examNoIndex;
+  const examNoIdx = exam.emisNoIndex;
   const subjects = exam.subjects;
 
-  // Helper: check if a student passed ALL subjects (>34)
+  // Helper: check if a student passed ALL subjects (>75)
   function passedAll(row) {
     for (let s of subjects) {
       const mark = row[s.colIndex];
-      if (mark == null || Number(mark) <= 34) return false;
+      if (mark == null || Number(mark) <= 75) return false;
     }
     return true;
   }
@@ -748,4 +748,149 @@
     if (!passedAll(row)) return;
 
     const totalVal = row[totalIdx];
-    if (totalVal == null)
+    if (totalVal == null) return;
+    const num = Number(totalVal);
+    if (Number.isNaN(num)) return;
+
+    const exNoCell = row[emisNoIdx];
+    if (exNoCell == null) return;
+    const exNo = String(exNoCell).trim();
+
+    scoreList.push({ emisNo: exNo, total: num });
+  });
+
+  if (!scoreList.length) return "-";
+
+  // sort top to bottom
+  scoreList.sort((a, b) => b.total - a.total);
+
+  // if THIS student didn't pass, return "-"
+  const studentRow = dataRows.find(r => String(r[emisNoIdx]).trim() === studentEmisNo);
+  if (!studentRow || !passedAll(studentRow)) return "-";
+
+  for (let i = 0; i < scoreList.length; i++) {
+    if (scoreList[i].emisNo === studentEmisNo) {
+      return i + 1;
+    }
+  }
+  
+  return "-";
+}
+
+    function renderResultTable(emisNo, studentName, examResults) {
+      const subjectSet = new Set();
+      examResults.forEach(er => {
+        const exam = er.exam;
+        exam.subjects.forEach(sub => subjectSet.add(sub.name));
+      });
+      const subjects = Array.from(subjectSet);
+
+      const table = document.createElement("table");
+
+      const thead = document.createElement("thead");
+      const trHead = document.createElement("tr");
+
+      const th0 = document.createElement("th");
+      th0.textContent = "Subject / Exam";
+      th0.style.textAlign = "left";
+      trHead.appendChild(th0);
+
+      examResults.forEach(er => {
+        const th = document.createElement("th");
+        th.textContent = er.exam.label;
+        trHead.appendChild(th);
+      });
+      thead.appendChild(trHead);
+
+    const tbody = document.createElement("tbody");
+
+      subjects.forEach(subName => {
+        const tr = document.createElement("tr");
+        const tdLabel = document.createElement("td");
+        tdLabel.textContent = subName;
+        tdLabel.className = "row-label";
+        tr.appendChild(tdLabel);
+
+        examResults.forEach(er => {
+          const td = document.createElement("td");
+          const res = er.result;
+          if (res && res.subjectMarks && subName in res.subjectMarks) {
+            const val = res.subjectMarks[subName];
+            td.textContent = (val === "" || val == null) ? "-" : val;
+          } else {
+            td.textContent = "-";
+          }
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      const trTotal = document.createElement("tr");
+      trTotal.className = "total-row";
+      const tdTotalLabel = document.createElement("td");
+      tdTotalLabel.textContent = "Total";
+      tdTotalLabel.className = "row-label";
+      trTotal.appendChild(tdTotalLabel);
+
+      examResults.forEach(er => {
+        const td = document.createElement("td");
+        const res = er.result;
+        td.textContent = res && res.total !== "" && res.total != null ? res.total : "-";
+        trTotal.appendChild(td);
+      });
+      tbody.appendChild(trTotal);
+
+      const trRank = document.createElement("tr");
+      trRank.className = "rank-row";
+      const tdRankLabel = document.createElement("td");
+      tdRankLabel.textContent = "Rank (within class)";
+      tdRankLabel.className = "row-label";
+      trRank.appendChild(tdRankLabel);
+
+      examResults.forEach(er => {
+        const td = document.createElement("td");
+        const res = er.result;
+        td.textContent = res && res.rank ? res.rank : "-";
+        trRank.appendChild(td);
+      });
+      tbody.appendChild(trRank);
+
+      table.appendChild(thead);
+      table.appendChild(tbody);
+
+      studentNameEl.textContent = studentName || "(Name not available)";
+      studentExamNoEl.textContent = emisNo;
+      examLabelSmall.textContent =
+        examResults.map(er => er.exam.label).join(" | ");
+
+      tableWrapper.innerHTML = "";
+      tableWrapper.appendChild(table);
+
+      resultArea.style.display = "block";
+      resultArea.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    
+        function launchStars(success) {
+      const count = success ? 18 : 8;
+      const emojis = success ? ["⭐", "🌟", "✨", "💫"] : ["✨", "⭐"];
+
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement("span");
+        star.className = "star";
+        star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        const startX = Math.random() * 100;
+        const delay = Math.random() * 0.4;
+        const duration = 1.4 + Math.random() * 0.7;
+
+        star.style.left = startX + "vw";
+        star.style.animationDelay = delay + "s";
+        star.style.animationDuration = duration + "s";
+document.body.appendChild(star);
+        star.addEventListener("animationend", () => star.remove());
+      }
+    }
+  </script>
+</body>
+</html>
