@@ -498,14 +498,14 @@
     let sheetRows = [];
     let exams = []; // detected exam blocks
 
-    const examNoInput = document.getElementById("examNoInput");
+    const emisNoInput = document.getElementById("emisNoInput");
     const showBtn     = document.getElementById("showBtn");
     const statusEl    = document.getElementById("status");
     const examOptions = document.getElementById("examOptions");
     const resultArea  = document.getElementById("resultArea");
     const tableWrapper = document.getElementById("tableWrapper");
     const studentNameEl = document.getElementById("studentName");
-    const studentExamNoEl = document.getElementById("studentExamNo");
+    const studentEmisNoEl = document.getElementById("studentEmisNo");
     const examLabelSmall = document.getElementById("examLabelSmall");
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -542,7 +542,7 @@
 
         detectExamBlocks();
         if (!exams.length) {
-          statusEl.textContent = "Could not detect exam blocks. Check that each block starts with 'EXAM NO' in the header row.";
+          statusEl.textContent = "Could not detect exam blocks. Check that each block starts with 'EMIS NO' in the header row.";
           examOptions.textContent = "No exams found.";
           return;
         }
@@ -677,14 +677,14 @@
       });
 
       if (!studentName && examResults.every(er => !er.result)) {
-        statusEl.textContent = "Exam Number not found in the selected exams.";
+        statusEl.textContent = "Emis Number not found in the selected exams.";
         resultArea.style.display = "none";
         launchStars(false);
         return;
       }
 
       statusEl.textContent = "";
-      renderResultTable(examNo, studentName, examResults);
+      renderResultTable(emisNo, studentName, examResults);
       launchStars(true);
     }
 
@@ -730,7 +730,7 @@
 
     function calculateRankForExam(dataRows, exam, studentEmisNo, studentTotalRaw) {
   const totalIdx = exam.totalIndex;
-  const examNoIdx = exam.emisNoIndex;
+  const emisNoIdx = exam.emisNoIndex;
   const subjects = exam.subjects;
 
   // Helper: check if a student passed ALL subjects (>75)
