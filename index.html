@@ -484,7 +484,7 @@
     const SHEET_ID   = "1RkGzPu3KkP5FRZqPMgmIYVbu2--y-NobJMpbNo-GgIc";   // ← paste only the ID, not the whole URL
     const SHEET_NAME = "Thiran";                // tab name
 
-    // Exam display names by block order (block 4+ optional – you can add more)
+    // Exam display names by block order (block 5+ optional – you can add more)
     const EXAM_NAMES = [
       "July",
       "August",
@@ -689,7 +689,7 @@
     }
 
     function findStudentInExam(dataRows, exam, emisNoInput) {
-      const examNoIdx = exam.emisNoIndex;
+      const emisNoIdx = exam.emisNoIndex;
       const nameIdx   = exam.nameIndex;
       const totalIdx  = exam.totalIndex;
       const subjects  = exam.subjects;
@@ -753,11 +753,11 @@
     const num = Number(totalVal);
     if (Number.isNaN(num)) return;
 
-    const exNoCell = row[emisNoIdx];
-    if (exNoCell == null) return;
-    const exNo = String(exNoCell).trim();
+    const emNoCell = row[emisNoIdx];
+    if (emNoCell == null) return;
+    const emNo = String(emNoCell).trim();
 
-    scoreList.push({ emisNo: exNo, total: num });
+    scoreList.push({ emisNo: emNo, total: num });
   });
 
   if (!scoreList.length) return "-";
@@ -861,7 +861,7 @@
       table.appendChild(tbody);
 
       studentNameEl.textContent = studentName || "(Name not available)";
-      studentExamNoEl.textContent = emisNo;
+      studentEmisNoEl.textContent = emisNo;
       examLabelSmall.textContent =
         examResults.map(er => er.exam.label).join(" | ");
 
