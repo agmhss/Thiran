@@ -13,10 +13,9 @@
       --text-main: #e5e7eb;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0;
       min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: radial-gradient(circle at top, #1d4ed8 0, #020617 45%, #020617 100%);
@@ -53,7 +52,6 @@
     }
 
     h1 {
-      margin: 0;
       font-size: clamp(1.6rem, 3.2vw, 2.2rem);
       display: flex;
       align-items: center;
@@ -113,17 +111,16 @@
     .card {
       background: var(--card-bg);
       border-radius: 18px;
-      padding: 14px 14px 12px;
+      padding: 14px;
       border: 1px solid rgba(148,163,184,0.4);
       box-shadow: 0 18px 45px rgba(15,23,42,0.9);
       margin-bottom: 14px;
-      animation: fadeInUp 0.5s ease-out;
     }
 
     .welcome {
       font-size: 0.9rem;
       color: #cbd5f5;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
     }
 
     .welcome span {
@@ -136,7 +133,6 @@
       grid-template-columns: minmax(0,1.2fr) minmax(0,2fr) minmax(0,1.2fr);
       gap: 12px;
       align-items: end;
-      margin-top: 8px;
     }
 
     label {
@@ -154,20 +150,14 @@
       padding: 9px 13px;
       font-size: 0.95rem;
       border: 1px solid rgba(148,163,184,0.7);
-      outline: none;
       background: rgba(15,23,42,0.94);
       color: #e5e7eb;
-      transition: border 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      outline: none;
     }
 
     input[type="text"]:focus {
       border-color: #4ade80;
       box-shadow: 0 0 0 1px rgba(74,222,128,0.7);
-      background: rgba(15,23,42,0.98);
-    }
-
-    ::placeholder {
-      color: #64748b;
     }
 
     .exam-options {
@@ -187,16 +177,7 @@
       font-size: 0.8rem;
       cursor: pointer;
       user-select: none;
-      transition: background 0.16s ease, border 0.16s ease, transform 0.12s ease;
-    }
-
-    .exam-pill input {
-      accent-color: #facc15;
-      cursor: pointer;
-    }
-
-    .exam-pill span {
-      padding-top: 1px;
+      transition: all 0.2s ease;
     }
 
     .exam-pill:hover {
@@ -204,11 +185,15 @@
       border-color: #fbbf24;
     }
 
+    .exam-pill input {
+      accent-color: #facc15;
+      cursor: pointer;
+    }
+
     button {
       border: none;
       border-radius: 999px;
       padding: 10px 18px;
-      font-size: 0.96rem;
       font-weight: 600;
       cursor: pointer;
       background: radial-gradient(circle at 10% -10%, #f97316, #facc15);
@@ -219,26 +204,17 @@
       gap: 6px;
       box-shadow: 0 10px 25px rgba(251,191,36,0.6);
       width: 100%;
-      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
-    }
-
-    button span.icon {
-      font-size: 1.1rem;
+      font-size: 0.96rem;
+      transition: all 0.2s ease;
     }
 
     button:hover {
-      transform: translateY(-1px) scale(1.01);
-      filter: brightness(1.05);
-      box-shadow: 0 16px 40px rgba(251,191,36,0.8);
-    }
-
-    button:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 16px rgba(251,191,36,0.7);
+      transform: translateY(-2px) scale(1.02);
+      filter: brightness(1.1);
     }
 
     #status {
-      margin-top: 6px;
+      margin-top: 8px;
       min-height: 1.2em;
       font-size: 0.84rem;
       color: #facc15;
@@ -250,41 +226,33 @@
       gap: 12px;
     }
 
-    .result-card,
-    .comment-card {
+    .result-card {
       background: var(--card-bg);
       border-radius: 16px;
-      padding: 12px 14px 14px;
+      padding: 14px;
       border: 1px solid rgba(148,163,184,0.45);
       box-shadow: 0 18px 45px rgba(15,23,42,0.9);
-      animation: fadeInUp 0.5s ease-out;
     }
 
-    .result-card h2,
-    .comment-card h2 {
-      margin: 0 0 6px;
-      font-size: 1rem;
+    .result-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+      color: #f9fafb;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      color: #f9fafb;
-    }
-
-    .result-card h2 span {
-      font-size: 0.8rem;
-      color: #a5b4fc;
-      font-weight: 400;
     }
 
     .student-meta {
-      font-size: 0.86rem;
+      font-size: 0.9rem;
       color: #e5e7eb;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 6px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 10px;
+      background: rgba(15,23,42,0.6);
+      border-radius: 10px;
     }
 
     .student-meta strong {
@@ -292,15 +260,13 @@
     }
 
     table {
-      table-layout: auto; 
       width: 100%;
       border-collapse: collapse;
-      margin-top: 6px;
-      font-size: 0.8rem;
+      margin-top: 8px;
+      font-size: 0.85rem;
       background: rgba(15,23,42,0.98);
       border-radius: 12px;
       overflow: hidden;
-
     }
 
     thead {
@@ -309,10 +275,13 @@
     }
 
     th, td {
-      padding: 6px 8px;
+      padding: 8px 10px;
       text-align: center;
-      border-bottom: 1px solid rgba(30,64,175,0.85);
-      white-space: nowrap;
+    }
+
+    th:first-child, td:first-child {
+      text-align: left;
+      font-weight: 600;
     }
 
     tbody tr:nth-child(even) {
@@ -323,79 +292,18 @@
       background: rgba(37,99,235,0.45);
     }
 
-    .row-label {
-      text-align: left;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
-
     .total-row td {
       font-weight: 700;
       color: #fbbf24;
-      background: rgba(30,64,175,0.85);
-      border-top: 1px solid rgba(148,163,184,0.7);
+      background: rgba(30,64,175,0.85) !important;
     }
 
-    .rank-row td {
-      font-weight: 700;
-      color: #facc15;
-      background: rgba(30,64,175,0.7);
-    }
-
-    .comment-card textarea {
-      width: 100%;
-      min-height: 120px;
-      border-radius: 12px;
-      border: 1px solid rgba(148,163,184,0.6);
-      padding: 8px 10px;
-      font-size: 0.9rem;
-      resize: vertical;
-      background: rgba(15,23,42,0.96);
-      color: #e5e7eb;
-      outline: none;
-      transition: border 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .comment-card textarea:focus {
-      border-color: #fb923c;
-      box-shadow: 0 0 0 1px rgba(251,146,60,0.75);
-    }
-
-    .comment-hint {
-      margin-top: 4px;
-      font-size: 0.8rem;
-      color: #cbd5f5;
-      opacity: 0.85;
-    }
-
-    .star {
-      position: fixed;
-      bottom: -20px;
-      font-size: 22px;
-      color: #facc15;
-      text-shadow:
-        0 0 8px rgba(250,204,21,0.9),
-        0 0 14px rgba(250,204,21,0.9);
-      opacity: 0;
-      pointer-events: none;
-      animation: flyUp 1.8s ease-out forwards;
-      z-index: 50;
-    }
-
-    @keyframes flyUp {
-      0% {
-        transform: translateY(0) scale(0.7) rotate(0deg);
-        opacity: 0;
+    @media (max-width: 840px) {
+      .form-grid, .result-wrapper {
+        grid-template-columns: 1fr;
       }
-      15% {
-        opacity: 1;
-      }
-      50% {
-        transform: translateY(-40vh) scale(1.05) rotate(12deg);
-      }
-      100% {
-        transform: translateY(-115vh) scale(0.95) rotate(-8deg);
-        opacity: 0;
+      .student-meta {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -404,15 +312,22 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 840px) {
-      .container { padding: 16px 14px 18px; border-radius: 22px; }
-      .form-grid {
-        grid-template-columns: minmax(0,1fr);
-      }
-      .result-wrapper {
-        grid-template-columns: minmax(0,1fr);
-      }
-      h1 { font-size: 1.5rem; }
+    .star {
+      position: fixed;
+      bottom: -20px;
+      font-size: 22px;
+      color: #facc15;
+      text-shadow: 0 0 14px rgba(250,204,21,0.9);
+      opacity: 0;
+      pointer-events: none;
+      animation: flyUp 1.8s ease-out forwards;
+      z-index: 50;
+    }
+
+    @keyframes flyUp {
+      0% { transform: translateY(0) scale(0.7); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(-120vh) scale(0.9) rotate(-15deg); opacity: 0; }
     }
   </style>
 </head>
@@ -420,204 +335,149 @@
   <div class="container">
     <div class="header-row">
       <div>
-        <h1>
-          <span class="logo">★</span>
-          AGMHSS PATTEESWARAM, THIRAN Result Dashboard
-        </h1>
-        <div class="subtitle">
-          Welcome Class 6 to 9 Students! Enter your EMIS number and choose the months to see your performance side-by-side.
-        </div>
+        <h1><span class="logo">★</span> AGMHSS PATTEESWARAM – THIRAN Results</h1>
+        <div class="subtitle">Class 6 to 9 • Compare your exam performance across months</div>
       </div>
-      <div class="badge">
-        <span class="badge-dot"></span>
-        Live marks from Google Sheets
-      </div>
+      <div class="badge"><span class="badge-dot"></span> Live from Google Sheets</div>
     </div>
 
-    <!-- INPUT CARD -->
     <div class="card">
       <div class="welcome">
-        Dear student, please enter your <span>Emis Number</span> and select one or more exams.
+        Dear student, enter your <span>EMIS Number</span> and select exams to compare.
       </div>
       <div class="form-grid">
         <div>
-          <label for="emisNoInput">Emis Number</label>
-          <input id="emisNoInput" type="text" placeholder="10 digits" />
+          <label for="emisNoInput">EMIS Number</label>
+          <input id="emisNoInput" type="text" placeholder="e.g. 1234567890" maxlength="12" />
         </div>
         <div>
-          <label>Exams to Compare</label>
-          <div id="examOptions" class="exam-options">
-            Loading exam list...
-          </div>
+          <label>Select Exams</label>
+          <div id="examOptions" class="exam-options">Loading exams...</div>
         </div>
         <div>
-          <button id="showBtn">
-            <span class="icon">🚀</span>
-            Show My Performance
-          </button>
+          <button id="showBtn">Show My Results</button>
         </div>
       </div>
       <div id="status"></div>
     </div>
 
-    <!-- RESULT + COMMENTS -->
     <div id="resultArea" style="display:none;">
       <div class="result-wrapper">
         <div class="result-card">
-          <h2>
-            Marks Comparison
-            <span id="examLabelSmall"></span>
-          </h2>
+          <h2>Marks Comparison <span id="examLabelSmall" style="font-size:0.8rem;opacity:0.9;"></span></h2>
           <div class="student-meta">
-            <span><strong>Name:</strong> <span id="studentName"></span></span>
-            <span><strong>Emis No:</strong> <span id="studentEmisNo"></span></span>
+            <span><strong>Name:</strong> <span id="studentName">—</span></span>
+            <span><strong>EMIS No:</strong> <span id="studentEmisNo">—</span></span>
+            <span><strong>Class & Sec:</strong> <span id="studentClass">—</span></span>
           </div>
           <div id="tableWrapper"></div>
-        </div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    /******************* CONFIG – EDIT THIS *******************/
-    const SHEET_ID   = "1RkGzPu3KkP5FRZqPMgmIYVbu2--y-NobJMpbNo-GgIc";   // ← paste only the ID, not the whole URL
-    const SHEET_NAME = "Thiran";                // tab name
+    // ================= CONFIG =================
+    const SHEET_ID   = "1RkGzPu3KkP5FRZqPMgmIYVbu2--y-NobJMpbNo-GgIc";
+    const SHEET_NAME = "Thiran";
 
-    // Exam display names by block order (block 5+ optional – you can add more)
-    const EXAM_NAMES = [
-      "July",
-      "August",
-      "September",
-      "November",
-      "December"   // block 5 – when you add it
-    ];
-    /*********************************************************/
+    const EXAM_NAMES = ["July", "August", "September", "November", "December", "January", "February", "March"];
+    // =========================================
 
     let sheetCols = [];
     let sheetRows = [];
-    let exams = []; // detected exam blocks
+    let exams = [];
 
-    const emisNoInput = document.getElementById("emisNoInput");
-    const showBtn     = document.getElementById("showBtn");
-    const statusEl    = document.getElementById("status");
-    const examOptions = document.getElementById("examOptions");
-    const resultArea  = document.getElementById("resultArea");
-    const tableWrapper = document.getElementById("tableWrapper");
-    const studentNameEl = document.getElementById("studentName");
-    const studentEmisNoEl = document.getElementById("studentEmisNo");
-    const examLabelSmall = document.getElementById("examLabelSmall");
+    const elements = {
+      emisNoInput: document.getElementById("emisNoInput"),
+      showBtn: document.getElementById("showBtn"),
+      status: document.getElementById("status"),
+      examOptions: document.getElementById("examOptions"),
+      resultArea: document.getElementById("resultArea"),
+      tableWrapper: document.getElementById("tableWrapper"),
+      studentName: document.getElementById("studentName"),
+      studentEmisNo: document.getElementById("studentEmisNo"),
+      studentClass: document.getElementById("studentClass"),
+      examLabelSmall: document.getElementById("examLabelSmall")
+    };
 
     document.addEventListener("DOMContentLoaded", () => {
       loadSheetData();
-      showBtn.addEventListener("click", onShowClick);
-      emisNoInput.addEventListener("keyup", (e) => {
-        if (e.key === "Enter") onShowClick();
-      });
+      elements.showBtn.addEventListener("click", onShowClick);
+      elements.emisNoInput.addEventListener("keyup", e => e.key === "Enter" && onShowClick());
     });
 
     async function loadSheetData() {
       try {
-        statusEl.textContent = "Connecting to Google Sheets...";
-        const url =
-          "https://docs.google.com/spreadsheets/d/" +
-          SHEET_ID +
-          "/gviz/tq?tqx=out:json&sheet=" +
-          encodeURIComponent(SHEET_NAME);
-
+        elements.status.textContent = "Loading data from Google Sheets...";
+        const url = `https://docs.google.com/spreadsheets/d/\( {SHEET_ID}/gviz/tq?tqx=out:json&sheet= \){encodeURIComponent(SHEET_NAME)}`;
         const res = await fetch(url);
         const text = await res.text();
+        const json = JSON.parse(text.substring(47, text.length - 2)); // Remove wrapper
 
-        const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1));
-        const table = json.table;
-
-        sheetCols = (table.cols || []).map(c => (c.label || ""));
-        sheetRows = (table.rows || []).map(r => (r.c || []).map(cell => cell ? cell.v : null));
-
-        if (!sheetRows.length) {
-          statusEl.textContent = "No data rows found in sheet.";
-          examOptions.textContent = "No data.";
-          return;
-        }
+        sheetCols = json.table.cols.map(c => (c.label || "").trim());
+        sheetRows = json.table.rows.map(r => r.c.map(cell => cell ? cell.v : null));
 
         detectExamBlocks();
-        if (!exams.length) {
-          statusEl.textContent = "Could not detect exam blocks. Check that each block starts with 'EMIS NO' in the header row.";
-          examOptions.textContent = "No exams found.";
+        if (exams.length === 0) {
+          elements.status.textContent = "No exam blocks found. Check sheet structure.";
           return;
         }
 
         buildExamOptions();
-        statusEl.textContent = "Ready. Enter your Emis Number and choose the exams.";
+        elements.status.textContent = "Ready! Enter EMIS number and select exams.";
       } catch (err) {
         console.error(err);
-        statusEl.textContent = "Error loading data. Check Sheet ID / publishing / sharing settings.";
-        examOptions.textContent = "Error loading.";
+        elements.status.textContent = "Error loading data. Check Sheet ID and publishing.";
       }
     }
 
-    // NEW: detect exam blocks wherever header label is "Emis NO"
     function detectExamBlocks() {
       exams = [];
-      const headers = sheetCols.map(h => (h || "").trim());
-      const starts = [];
+      const headers = sheetCols;
 
-      headers.forEach((lbl, idx) => {
-        if (lbl.toLowerCase().startsWith("emis no")) {
-          starts.push(idx);
-        }
-      });
+      let blockIndex = 0;
+      for (let i = 0; i < headers.length; i++) {
+        if (headers[i] && headers[i].toLowerCase().includes("emis no")) {
+          const startCol = i;
+          const nextStart = sheetCols.slice(i + 1).findIndex(h => h && h.toLowerCase().includes("emis no"));
+          const endCol = nextStart === -1 ? headers.length - 1 : i + nextStart + 1;
 
-      if (!starts.length) return;
+          const block = {
+            id: blockIndex,
+            label: EXAM_NAMES[blockIndex] || `Exam ${blockIndex + 1}`,
+            startCol,
+            endCol,
+            emisNoIndex: i,
+            nameIndex: null,
+            classIndex: null,
+            totalIndex: null,
+            subjects: []
+          };
 
-      for (let bi = 0; bi < starts.length; bi++) {
-        const start = starts[bi];
-        const end = (bi + 1 < starts.length ? starts[bi + 1] : headers.length) - 1;
+          // Scan columns in this block
+          for (let c = startCol + 1; c <= endCol; c++) {
+            const label = headers[c] || "";
+            const lower = label.toLowerCase();
 
-        let emisNoIndex = start;
-        let nameIndex = null;
-        let totalIndex = null;
-        const subjects = [];
+            if (lower === "name" || lower.includes("student name")) block.nameIndex = c;
+            else if (lower.includes("class") && (lower.includes("sec") || label.includes("&"))) block.classIndex = c;
+            else if (lower.includes("total")) block.totalIndex = c;
+            else if (label && !lower.includes("rank") && !lower.includes("emis")) {
+              block.subjects.push({ name: label, colIndex: c });
+            }
+          }
 
-        for (let c = start + 1; c <= end; c++) {
-          const label = headers[c];
-          if (!label) continue;
-
-          const lower = label.toLowerCase();
-          if (lower === "name") {
-            nameIndex = c;
-          } else if (lower.includes("total")) {
-            totalIndex = c;
-          } else if (!lower.includes("rank")) {
-            subjects.push({ name: label, colIndex: c });
+          if (block.nameIndex !== null && block.totalIndex !== null && block.subjects.length > 0) {
+            exams.push(block);
+            blockIndex++;
           }
         }
-
-        if (nameIndex == null || totalIndex == null || !subjects.length) {
-          continue; // skip malformed block
-        }
-
-       const configuredName = EXAM_NAMES[bi] || ("Exam " + (bi + 1));
-
-        exams.push({
-          id: configuredName,
-          label: configuredName,
-          startCol: start,
-          endCol: end,
-          emisNoIndex,
-          nameIndex,
-          totalIndex,
-          subjects
-        });
       }
     }
 
     function buildExamOptions() {
-      if (!exams.length) {
-        examOptions.textContent = "No exams found.";
-        return;
-      }
-      examOptions.innerHTML = "";
+      elements.examOptions.innerHTML = "";
       exams.forEach((exam, idx) => {
         const label = document.createElement("label");
         label.className = "exam-pill";
@@ -625,270 +485,139 @@
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.value = idx;
-        checkbox.checked = false;
 
         const span = document.createElement("span");
         span.textContent = exam.label;
 
-        label.appendChild(checkbox);
-        label.appendChild(span);
-        examOptions.appendChild(label);
+        label.append(checkbox, span);
+        elements.examOptions.appendChild(label);
       });
     }
 
     function onShowClick() {
-      if (!sheetRows.length || !exams.length) {
-        statusEl.textContent = "Data not ready yet.";
-        return;
-      }
+      const emisNo = elements.emisNoInput.value.trim();
+      if (!emisNo) return elements.status.textContent = "Please enter EMIS number.";
 
-      const emisNo = (emisNoInput.value || "").trim();
-      if (!emisNo) {
-        statusEl.textContent = "Please enter your Emis Number.";
-        resultArea.style.display = "none";
-        launchStars(false);
-        return;
-      }
+      const selected = Array.from(elements.examOptions.querySelectorAll("input:checked"))
+        .map(cb => parseInt(cb.value));
 
-      const selectedExamIndexes = [];
-      examOptions.querySelectorAll("input[type='checkbox']").forEach(cb => {
-        if (cb.checked) selectedExamIndexes.push(Number(cb.value));
-      });
+      if (selected.length === 0) return elements.status.textContent = "Select at least one exam.";
 
-      if (!selectedExamIndexes.length) {
-        statusEl.textContent = "Please select at least one exam.";
-        resultArea.style.display = "none";
-        launchStars(false);
-        return;
-      }
-
-      const dataRows = sheetRows; // first row is already student data (headers are in sheetCols)
-
-      const examResults = [];
+      const results = [];
       let studentName = "";
+      let studentClass = "";
 
-      selectedExamIndexes.forEach(idx => {
+      selected.forEach(idx => {
         const exam = exams[idx];
-        const res = findStudentInExam(dataRows, exam, emisNo);
-        if (res && !studentName && res.name) {
-          studentName = res.name;
+        const row = sheetRows.find(r => r[exam.emisNoIndex] != null && String(r[exam.emisNoIndex]).trim() === emisNo);
+        if (row) {
+          const name = row[exam.nameIndex] || "";
+          const cls = exam.classIndex !== null ? row[exam.classIndex] || "" : "";
+          const total = row[exam.totalIndex] || "";
+          const marks = {};
+          exam.subjects.forEach(sub => {
+            marks[sub.name] = row[sub.colIndex] ?? "";
+          });
+
+          if (!studentName) studentName = name;
+          if (!studentClass && cls) studentClass = cls;
+
+          results.push({ exam, result: { name, total, marks } });
+        } else {
+          results.push({ exam, result: null });
         }
-        examResults.push({ exam, result: res });
       });
 
-      if (!studentName && examResults.every(er => !er.result)) {
-        statusEl.textContent = "Emis Number not found in the selected exams.";
-        resultArea.style.display = "none";
-        launchStars(false);
+      if (results.every(r => !r.result)) {
+        elements.status.textContent = "EMIS number not found in selected exams.";
+        elements.resultArea.style.display = "none";
         return;
       }
 
-      statusEl.textContent = "";
-      renderResultTable(emisNo, studentName, examResults);
+      renderResults(emisNo, studentName, studentClass, results);
+      elements.status.textContent = "";
       launchStars(true);
     }
 
-    function findStudentInExam(dataRows, exam, emisNoInput) {
-      const emisNoIdx = exam.emisNoIndex;
-      const nameIdx   = exam.nameIndex;
-      const totalIdx  = exam.totalIndex;
-      const subjects  = exam.subjects;
-
-      let studentRowIndex = -1;
-      let studentRow = null;
-
-      for (let i = 0; i < dataRows.length; i++) {
-        const row = dataRows[i];
-        const value = row[emisNoIdx];
-        if (value == null) continue;
-        const cellEmisNo = String(value).trim();
-        if (cellEmisNo === emisNoInput) {
-          studentRowIndex = i;
-          studentRow = row;
-          break;
-        }
-      }
-
-      if (studentRowIndex === -1 || !studentRow) {
-        return null;
-      }
-
-      const name = studentRow[nameIdx] != null ? String(studentRow[nameIdx]) : "";
-      const totalRaw = studentRow[totalIdx];
-      const total = totalRaw != null ? totalRaw : "";
-
-      const subjectMarks = {};
-      subjects.forEach(sub => {
-        const v = studentRow[sub.colIndex];
-        subjectMarks[sub.name] = (v != null ? v : "");
-      });
-
-      const rank = calculateRankForExam(dataRows, exam, String(studentRow[emisNoIdx]).trim(), totalRaw);
-
-      return { name, emisNo: String(studentRow[emisNoIdx]).trim(), total, subjectMarks, rank };
-    }
-
-    function calculateRankForExam(dataRows, exam, studentEmisNo, studentTotalRaw) {
-  const totalIdx = exam.totalIndex;
-  const emisNoIdx = exam.emisNoIndex;
-  const subjects = exam.subjects;
-
-  // Helper: check if a student passed ALL subjects (>75)
-  function passedAll(row) {
-    for (let s of subjects) {
-      const mark = row[s.colIndex];
-      if (mark == null || Number(mark) <= 75) return false;
-    }
-    return true;
-  }
-
-  const scoreList = [];
-
-  dataRows.forEach(row => {
-    // include only students who passed ALL subjects
-    if (!passedAll(row)) return;
-
-    const totalVal = row[totalIdx];
-    if (totalVal == null) return;
-    const num = Number(totalVal);
-    if (Number.isNaN(num)) return;
-
-    const emNoCell = row[emisNoIdx];
-    if (emNoCell == null) return;
-    const emNo = String(emNoCell).trim();
-
-    scoreList.push({ emisNo: emNo, total: num });
-  });
-
-  if (!scoreList.length) return "-";
-
-  // sort top to bottom
-  scoreList.sort((a, b) => b.total - a.total);
-
-  // if THIS student didn't pass, return "-"
-  const studentRow = dataRows.find(r => String(r[emisNoIdx]).trim() === studentEmisNo);
-  if (!studentRow || !passedAll(studentRow)) return "-";
-
-  for (let i = 0; i < scoreList.length; i++) {
-    if (scoreList[i].emisNo === studentEmisNo) {
-      return i + 1;
-    }
-  }
-  
-  return "-";
-}
-
-    function renderResultTable(emisNo, studentName, examResults) {
-      const subjectSet = new Set();
-      examResults.forEach(er => {
-        const exam = er.exam;
-        exam.subjects.forEach(sub => subjectSet.add(sub.name));
-      });
-      const subjects = Array.from(subjectSet);
+    function renderResults(emisNo, name, cls, examResults) {
+      const subjects = new Set();
+      examResults.forEach(er => er.exam.subjects.forEach(s => subjects.add(s.name)));
+      const subjectList = Array.from(subjects);
 
       const table = document.createElement("table");
-
       const thead = document.createElement("thead");
-      const trHead = document.createElement("tr");
+      const tbody = document.createElement("tbody");
 
-      const th0 = document.createElement("th");
-      th0.textContent = "Subject / Exam";
-      th0.style.textAlign = "left";
-      trHead.appendChild(th0);
+      const headRow = document.createElement("tr");
+      const thSubject = document.createElement("th");
+      thSubject.textContent = "Subject";
+      headRow.appendChild(thSubject);
 
       examResults.forEach(er => {
         const th = document.createElement("th");
         th.textContent = er.exam.label;
-        trHead.appendChild(th);
+        headRow.appendChild(th);
       });
-      thead.appendChild(trHead);
+      thead.appendChild(headRow);
+      table.appendChild(thead);
 
-    const tbody = document.createElement("tbody");
-
-      subjects.forEach(subName => {
+      subjectList.forEach(sub => {
         const tr = document.createElement("tr");
-        const tdLabel = document.createElement("td");
-        tdLabel.textContent = subName;
-        tdLabel.className = "row-label";
-        tr.appendChild(tdLabel);
+        const tdSub = document.createElement("td");
+        tdSub.textContent = sub;
+        tdSub.style.fontWeight = "600";
+        tr.appendChild(tdSub);
 
         examResults.forEach(er => {
           const td = document.createElement("td");
-          const res = er.result;
-          if (res && res.subjectMarks && subName in res.subjectMarks) {
-            const val = res.subjectMarks[subName];
-            td.textContent = (val === "" || val == null) ? "-" : val;
+          if (er.result && er.result.marks[sub] !== undefined) {
+            td.textContent = er.result.marks[sub] || "-";
           } else {
             td.textContent = "-";
           }
           tr.appendChild(td);
         });
-
         tbody.appendChild(tr);
       });
 
-      const trTotal = document.createElement("tr");
-      trTotal.className = "total-row";
-      const tdTotalLabel = document.createElement("td");
-      tdTotalLabel.textContent = "Total";
-      tdTotalLabel.className = "row-label";
-      trTotal.appendChild(tdTotalLabel);
+      // Total Row
+      const totalRow = document.createElement("tr");
+      totalRow.className = "total-row";
+      const totalLabel = document.createElement("td");
+      totalLabel.textContent = "Total";
+      totalLabel.style.fontWeight = "700";
+      totalRow.appendChild(totalLabel);
 
       examResults.forEach(er => {
         const td = document.createElement("td");
-        const res = er.result;
-        td.textContent = res && res.total !== "" && res.total != null ? res.total : "-";
-        trTotal.appendChild(td);
+        td.textContent = er.result ? (er.result.total || "-") : "-";
+        totalRow.appendChild(td);
       });
-      tbody.appendChild(trTotal);
+      tbody.appendChild(totalRow);
 
-      const trRank = document.createElement("tr");
-      trRank.className = "rank-row";
-      const tdRankLabel = document.createElement("td");
-      tdRankLabel.textContent = "Rank (within class)";
-      tdRankLabel.className = "row-label";
-      trRank.appendChild(tdRankLabel);
-
-      examResults.forEach(er => {
-        const td = document.createElement("td");
-        const res = er.result;
-        td.textContent = res && res.rank ? res.rank : "-";
-        trRank.appendChild(td);
-      });
-      tbody.appendChild(trRank);
-
-      table.appendChild(thead);
       table.appendChild(tbody);
 
-      studentNameEl.textContent = studentName || "(Name not available)";
-      studentEmisNoEl.textContent = emisNo;
-      examLabelSmall.textContent =
-        examResults.map(er => er.exam.label).join(" | ");
+      elements.studentName.textContent = name || "Name not found";
+      elements.studentEmisNo.textContent = emisNo;
+      elements.studentClass.textContent = cls || "Not available";
+      elements.examLabelSmall.textContent = examResults.map(r => r.exam.label).join(" vs ");
 
-      tableWrapper.innerHTML = "";
-      tableWrapper.appendChild(table);
+      elements.tableWrapper.innerHTML = "";
+      elements.tableWrapper.appendChild(table);
+      elements.resultArea.style.display = "block";
+      elements.resultArea.scrollIntoView({ behavior: "smooth" });
+    }
 
-      resultArea.style.display = "block";
-      resultArea.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    
-        function launchStars(success) {
-      const count = success ? 18 : 8;
-      const emojis = success ? ["⭐", "🌟", "✨", "💫"] : ["✨", "⭐"];
-
+    function launchStars(success = true) {
+      const count = success ? 20 : 10;
+      const emojis = success ? ["⭐", "🌟", "✨", "💫", "🎉"] : ["💔", "😢"];
       for (let i = 0; i < count; i++) {
-        const star = document.createElement("span");
+        const star = document.createElement("div");
         star.className = "star";
         star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-
-        const startX = Math.random() * 100;
-        const delay = Math.random() * 0.4;
-        const duration = 1.4 + Math.random() * 0.7;
-
-        star.style.left = startX + "vw";
-        star.style.animationDelay = delay + "s";
-        star.style.animationDuration = duration + "s";
-document.body.appendChild(star);
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.animationDelay = Math.random() * 0.5 + "s";
+        document.body.appendChild(star);
         star.addEventListener("animationend", () => star.remove());
       }
     }
