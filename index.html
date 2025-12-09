@@ -88,7 +88,7 @@
     .student-meta{
       background:rgba(15,23,42,0.6);
       padding:12px;border-radius:10px;margin-bottom:12px;
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
       gap:8px;font-size:0.92rem;
     }
     .student-meta strong{color:#facc15;}
@@ -142,18 +142,17 @@
       <div class="student-meta">
         <span><strong>Name:</strong> <span id="sName">—</span></span>
         <span><strong>EMIS:</strong> <span id="sEmis">—</span></span>
-        <span><strong>Class & Sec:</strong> <span id="sClass">—</span></span>
+        <span><strong>Class:</strong> <span id="sClass">—</span></span>
+        <span><strong>Section:</strong> <span id="sSec">—</span></span>
       </div>
       <div id="tableWrapper"></div>
     </div>
   </div>
 
   <script>
-    // CONFIG
     const SHEET_ID   = "17Lupgg8a6AKXfcu_WrSElxfZ1XKuxS1O8bBXpEv5DM4";
     const SHEET_NAME = "Sheet1";
 
-    // Exam block names for 2025 + extra for 2026
     const EXAM_NAMES = [
       "July 2025","August 2025","September 2025",
       "November 2025","December 2025",
@@ -169,8 +168,8 @@
     async function loadSheet() {
       status.textContent = "Connecting to Google Sheets...";
       const url =
-        `https://docs.google.com/spreadsheets/d/` +
-        `${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+        `https://docs.google.com/spreadsheets/d/${SHEET_ID}` +
+        `/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
       try {
         const resp = await fetch(url);
@@ -193,7 +192,7 @@
       } catch (err) {
         console.error(err);
         status.textContent =
-          "Failed to load data. Check Sheet ID, tab name and Publish-to-Web sharing.";
+          "Failed to load data. Check Sheet ID, tab name and sharing.";
         examOptions.innerHTML = "Error loading sheet";
       }
     }
@@ -214,20 +213,30 @@
             emisCol: i,
             nameCol: null,
             classCol: null,
+            secCol: null,
             totalCol: null,
             subjects: []
           };
 
           for (let c = start + 1; c <= end; c++) {
-            const label = (headers[c] || "").toLowerCase();
-            if (label.includes("name") && !label.includes("emis")) block.nameCol = c;
-            else if (label.includes("class") || label.includes("sec")) block.classCol = c;
-            else if (label.includes("total") && !label.includes("rank")) block.totalCol = c;
-            else if (
-              headers[c] &&
+            const rawLabel = headers[c] || "";
+            const label = rawLabel.toLowerCase();
+
+            if (label.includes("name") && !label.includes("emis")) {
+              block.nameCol = c;
+            } else if (label.includes("class") && !label.includes("sec")) {
+              // Class only
+              block.classCol = c;
+            } else if (label.includes("sec") || label.includes("section")) {
+              block.secCol = c;
+            } else if (label.includes("total") && !label.includes("rank")) {
+              block.totalCol = c;
+            } else if (
+              rawLabel &&
+              !label.includes("emis") &&   // avoid EMIS columns becoming subjects
               !["rank","s.no","sl.no"].some(x => label.includes(x))
             ) {
-              block.subjects.push({ name: headers[c], col: c });
+              block.subjects.push({ name: rawLabel, col: c });
             }
           }
 
@@ -283,19 +292,20 @@
 
       let name = "";
       let cls  = "";
+      let sec  = "";
       const results = [];
 
       selected.forEach(idx => {
         const exam = exams[idx];
 
-        // Find the row where this block’s EMIS column matches
         const row = sheetRows.find(
           r => r[exam.emisCol] != null && String(r[exam.emisCol]).trim() === emis
         );
 
         if (row) {
           if (!name && exam.nameCol !== null) name = row[exam.nameCol] || "";
-          if (!cls && exam.classCol !== null) cls = row[exam.classCol] || "";
+          if (!cls && exam.classCol !== null)  cls  = row[exam.classCol]  || "";
+          if (!sec && exam.secCol  !== null)   sec  = row[exam.secCol]   || "";
 
           const marks = {};
           exam.subjects.forEach(s => {
@@ -308,7 +318,6 @@
             marks
           });
         } else {
-          // Exam block present but no row for this EMIS
           results.push({ exam: exam.label, total: "-", marks: {} });
         }
       });
@@ -319,12 +328,12 @@
         return;
       }
 
-      renderTable(name, emis, cls, results);
+      renderTable(name, emis, cls, sec, results);
       document.getElementById("resultArea").style.display = "block";
       status.textContent = "";
     }
 
-    function renderTable(name, emis, cls, results) {
+    function renderTable(name, emis, cls, sec, results) {
       const allSubjects = new Set();
       results.forEach(r => Object.keys(r.marks).forEach(s => allSubjects.add(s)));
       const subjects = Array.from(allSubjects);
@@ -349,6 +358,7 @@
       document.getElementById("sName").textContent = name || "—";
       document.getElementById("sEmis").textContent = emis;
       document.getElementById("sClass").textContent = cls || "—";
+      document.getElementById("sSec").textContent   = sec || "—";
       document.getElementById("examLabels").textContent =
         results.map(r => r.exam).join(" vs ");
       document.getElementById("tableWrapper").innerHTML = html;
