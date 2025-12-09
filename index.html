@@ -34,7 +34,7 @@
 
 <body>
 
-<h2>Student Result Viewer</h2>
+<h2>THIRAN Result Viewer</h2>
 
 <input id="emisInput" placeholder="Enter EMIS Number">
 <button onclick="searchStudent()">Search</button>
@@ -85,6 +85,29 @@ function detectExamBlocks(cols) {
 }
 
 /* -----------------------------
+   FIND COLUMN INDEXES
+------------------------------*/
+function findColumnIndexes(cols) {
+    let indices = {
+        emis: null,
+        name: null,
+        class: null,
+        section: null
+    };
+
+    cols.forEach((col, index) => {
+        let label = col.label.trim().toLowerCase();
+
+        if (label === "emis no" || label === "emisno") indices.emis = index;
+        if (label === "name" || label === "student name") indices.name = index;
+        if (label === "class" || label === "std") indices.class = index;
+        if (label === "section" || label === "sec") indices.section = index;
+    });
+
+    return indices;
+}
+
+/* -----------------------------
    SEARCH STUDENT AND DISPLAY ALL EXAMS
 ------------------------------*/
 function searchStudent() {
@@ -93,10 +116,11 @@ function searchStudent() {
 
     const table = window.DATA;
     const blocks = window.BLOCKS;
+    const idx = window.COLIDX;
 
     // Find student row
     const studentRow = table.rows.find(r => {
-        let cell = r.c[blocks[0].startCol];
+        let cell = r.c[idx.emis];
         return cell && String(cell.v).trim() === emis;
     });
 
@@ -106,10 +130,26 @@ function searchStudent() {
     }
 
     /* -----------------------------
-       Build Comparison Table
+       Extract student info
     ------------------------------*/
-    let html = "<h3>Results for EMIS: " + emis + "</h3>";
-    html += "<table><tr><th>Exam</th><th>Maths</th><th>English</th><th>Tamil</th><th>Total</th></tr>";
+    const name = studentRow.c[idx.name]?.v || "N/A";
+    const cls = studentRow.c[idx.class]?.v || "N/A";
+    const sec = studentRow.c[idx.section]?.v || "N/A";
+
+    /* -----------------------------
+       Build Output
+    ------------------------------*/
+    let html = `
+        <h3>Student Details</h3>
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Class:</b> ${cls}</p>
+        <p><b>Section:</b> ${sec}</p>
+        <p><b>EMIS Number:</b> ${emis}</p>
+
+        <h3>Exam Results</h3>
+        <table>
+        <tr><th>Exam</th><th>Maths</th><th>English</th><th>Tamil</th><th>Total</th></tr>
+    `;
 
     blocks.forEach((block, index) => {
         const maths = studentRow.c[block.startCol + 4]?.v || "";
@@ -142,6 +182,7 @@ async function init() {
 
     window.DATA = data;
     window.BLOCKS = detectExamBlocks(data.cols);
+    window.COLIDX = findColumnIndexes(data.cols);
 }
 
 init();
