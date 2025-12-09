@@ -48,7 +48,8 @@
 const SHEET_ID = "17Lupgg8a6AKXfcu_WrSElxfZ1XKuxS1O8bBXpEv5DM4";
 const SHEET_NAME = "Sheet1";
 
-const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+const GVIZ_URL =
+  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
 /* -----------------------------
    FETCH SHEET
@@ -66,79 +67,47 @@ async function fetchSheet() {
 }
 
 /* -----------------------------
-   DETECT EXAM BLOCKS (Emis No → Total)
-------------------------------*/
-function detectExamBlocks(cols) {
-    let blocks = [];
-    let start = null;
-
-    for (let i = 0; i < cols.length; i++) {
-        const name = cols[i].label.trim().toLowerCase();
-
-        if (name === "emis no" || name === "emisno") start = i;
-        if (name === "total" && start !== null) {
-            blocks.push({ startCol: start, endCol: i });
-            start = null;
-        }
-    }
-    return blocks;
-}
-
-/* -----------------------------
-   FIND COLUMN INDEXES
-------------------------------*/
-function findColumnIndexes(cols) {
-    let indices = {
-        emis: null,
-        name: null,
-        class: null,
-        section: null
-    };
-
-    cols.forEach((col, index) => {
-        let label = col.label.trim().toLowerCase();
-
-        if (label === "emis no" || label === "emisno") indices.emis = index;
-        if (label === "name" || label === "student name") indices.name = index;
-        if (label === "class" || label === "std") indices.class = index;
-        if (label === "section" || label === "sec") indices.section = index;
-    });
-
-    return indices;
-}
-
-/* -----------------------------
-   SEARCH STUDENT AND DISPLAY ALL EXAMS
+   SEARCH STUDENT
 ------------------------------*/
 function searchStudent() {
     const emis = document.getElementById("emisInput").value.trim();
     if (!emis) return alert("Enter an EMIS number");
 
     const table = window.DATA;
-    const blocks = window.BLOCKS;
-    const idx = window.COLIDX;
+    if (!table) return;
 
-    // Find student row
-    const studentRow = table.rows.find(r => {
-        let cell = r.c[idx.emis];
+    // Column indexes
+    const col = {
+        emis: 0,
+        class: 1,
+        section: 2,
+        name: 3,
+        maths: 4,
+        english: 5,
+        tamil: 6,
+        total: 7
+    };
+
+    // Find student
+    const row = table.rows.find(r => {
+        let cell = r.c[col.emis];
         return cell && String(cell.v).trim() === emis;
     });
 
-    if (!studentRow) {
+    if (!row) {
         document.getElementById("resultContainer").innerHTML = "<p>No student found.</p>";
         return;
     }
 
-    /* -----------------------------
-       Extract student info
-    ------------------------------*/
-    const name = studentRow.c[idx.name]?.v || "N/A";
-    const cls = studentRow.c[idx.class]?.v || "N/A";
-    const sec = studentRow.c[idx.section]?.v || "N/A";
+    const name = row.c[col.name]?.v || "";
+    const cls = row.c[col.class]?.v || "";
+    const sec = row.c[col.section]?.v || "";
+    const maths = row.c[col.maths]?.v || "";
+    const english = row.c[col.english]?.v || "";
+    const tamil = row.c[col.tamil]?.v || "";
+    const total = row.c[col.total]?.v || "";
 
-    /* -----------------------------
-       Build Output
-    ------------------------------*/
+    // Build HTML
     let html = `
         <h3>Student Details</h3>
         <p><b>Name:</b> ${name}</p>
@@ -146,43 +115,33 @@ function searchStudent() {
         <p><b>Section:</b> ${sec}</p>
         <p><b>EMIS Number:</b> ${emis}</p>
 
-        <h3>Exam Results</h3>
+        <h3>Marks</h3>
         <table>
-        <tr><th>Exam</th><th>Maths</th><th>English</th><th>Tamil</th><th>Total</th></tr>
-    `;
-
-    blocks.forEach((block, index) => {
-        const maths = studentRow.c[block.startCol + 4]?.v || "";
-        const english = studentRow.c[block.startCol + 5]?.v || "";
-        const tamil = studentRow.c[block.startCol + 6]?.v || "";
-        const total = studentRow.c[block.startCol + 7]?.v || "";
-
-        html += `
             <tr>
-                <td>Exam ${index + 1}</td>
+                <th>Maths</th>
+                <th>English</th>
+                <th>Tamil</th>
+                <th>Total</th>
+            </tr>
+            <tr>
                 <td>${maths}</td>
                 <td>${english}</td>
                 <td>${tamil}</td>
                 <td>${total}</td>
             </tr>
-        `;
-    });
-
-    html += "</table>";
+        </table>
+    `;
 
     document.getElementById("resultContainer").innerHTML = html;
 }
 
 /* -----------------------------
-   MAIN INIT
+   INIT
 ------------------------------*/
 async function init() {
     const data = await fetchSheet();
     if (!data) return;
-
     window.DATA = data;
-    window.BLOCKS = detectExamBlocks(data.cols);
-    window.COLIDX = findColumnIndexes(data.cols);
 }
 
 init();
