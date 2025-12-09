@@ -5,27 +5,29 @@
 <title>Student Result Viewer</title>
 <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
-    .exam-pill {
-        display: inline-block; 
-        padding: 8px 16px;
-        margin: 6px;
-        border-radius: 20px;
-        background: #e0e0ff;
-        cursor: pointer;
-        border: 1px solid #888;
+    input {
+        padding: 10px;
+        font-size: 16px;
+        width: 250px;
+        margin-bottom: 12px;
     }
-    .exam-pill.active {
-        background: #4b7bff;
-        color: white;
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
     }
     table {
         border-collapse: collapse;
         width: 100%;
         margin-top: 20px;
     }
-    table, th, td {
+    th, td {
         border: 1px solid #444;
-        padding: 6px;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background: #f0f0f0;
     }
 </style>
 </head>
@@ -34,52 +36,46 @@
 
 <h2>Student Result Viewer</h2>
 
-<div id="examContainer"></div>
+<input id="emisInput" placeholder="Enter EMIS Number">
+<button onclick="searchStudent()">Search</button>
+
 <div id="resultContainer"></div>
 
 <script>
 /* -----------------------------
    CONFIG
 ------------------------------*/
-const SHEET_ID = "17Lupgg8a6AKXfcu_WrSElxfZ1XKuxS1O8bBXpEv5DM4"; 
-const SHEET_NAME = "Sheet1";   // Change if needed
+const SHEET_ID = "17Lupgg8a6AKXfcu_WrSElxfZ1XKuxS1O8bBXpEv5DM4";
+const SHEET_NAME = "Sheet1";
 
 const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
 /* -----------------------------
-   FETCH SHEET SAFELY
+   FETCH SHEET
 ------------------------------*/
 async function fetchSheet() {
     try {
         const response = await fetch(GVIZ_URL);
-        let text = await response.text();
-
-        // Extract JSON from Google’s wrapper
-        const json = JSON.parse(
-            text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1)
-        );
-
+        const text = await response.text();
+        const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1));
         return json.table;
     } catch (err) {
-        console.error("Fetch Error:", err);
-        alert("Error fetching data. Ensure the sheet is PUBLISHED and shared as 'Anyone with link can view'.");
+        alert("Error fetching sheet. Ensure it is published.");
         return null;
     }
 }
 
 /* -----------------------------
-   PROCESS COLUMNS INTO EXAM BLOCKS
+   DETECT EXAM BLOCKS (Emis No → Total)
 ------------------------------*/
 function detectExamBlocks(cols) {
     let blocks = [];
     let start = null;
 
     for (let i = 0; i < cols.length; i++) {
-        let name = cols[i].label.trim().toLowerCase();
+        const name = cols[i].label.trim().toLowerCase();
 
-        if (name === "emis no" || name === "emisno") {
-            start = i;
-        }
+        if (name === "emis no" || name === "emisno") start = i;
         if (name === "total" && start !== null) {
             blocks.push({ startCol: start, endCol: i });
             start = null;
@@ -89,52 +85,47 @@ function detectExamBlocks(cols) {
 }
 
 /* -----------------------------
-   BUILD EXAM SELECTION BUTTONS
+   SEARCH STUDENT AND DISPLAY ALL EXAMS
 ------------------------------*/
-function renderExamButtons(blocks) {
-    const cont = document.getElementById("examContainer");
-    cont.innerHTML = "";
-
-    blocks.forEach((b, idx) => {
-        const div = document.createElement("div");
-        div.className = "exam-pill";
-        div.innerText = "Exam " + (idx + 1);
-
-        div.onclick = () => {
-            document.querySelectorAll(".exam-pill").forEach(x => x.classList.remove("active"));
-            div.classList.add("active");
-            loadExam(idx);
-        };
-
-        cont.appendChild(div);
-    });
-}
-
-/* -----------------------------
-   LOAD SELECTED EXAM INTO TABLE
-------------------------------*/
-function loadExam(examIndex) {
-    if (!window.DATA) return;
+function searchStudent() {
+    const emis = document.getElementById("emisInput").value.trim();
+    if (!emis) return alert("Enter an EMIS number");
 
     const table = window.DATA;
-    const block = window.BLOCKS[examIndex];
+    const blocks = window.BLOCKS;
 
-    let html = "<table><tr>";
+    // Find student row
+    const studentRow = table.rows.find(r => {
+        let cell = r.c[blocks[0].startCol];
+        return cell && String(cell.v).trim() === emis;
+    });
 
-    // Headers
-    for (let c = block.startCol; c <= block.endCol; c++) {
-        html += `<th>${table.cols[c].label}</th>`;
+    if (!studentRow) {
+        document.getElementById("resultContainer").innerHTML = "<p>No student found.</p>";
+        return;
     }
-    html += "</tr>";
 
-    // Rows
-    table.rows.forEach(row => {
-        html += "<tr>";
-        for (let c = block.startCol; c <= block.endCol; c++) {
-            const cell = row.c[c];
-            html += `<td>${cell ? cell.v : ""}</td>`;
-        }
-        html += "</tr>";
+    /* -----------------------------
+       Build Comparison Table
+    ------------------------------*/
+    let html = "<h3>Results for EMIS: " + emis + "</h3>";
+    html += "<table><tr><th>Exam</th><th>Maths</th><th>English</th><th>Tamil</th><th>Total</th></tr>";
+
+    blocks.forEach((block, index) => {
+        const maths = studentRow.c[block.startCol + 4]?.v || "";
+        const english = studentRow.c[block.startCol + 5]?.v || "";
+        const tamil = studentRow.c[block.startCol + 6]?.v || "";
+        const total = studentRow.c[block.startCol + 7]?.v || "";
+
+        html += `
+            <tr>
+                <td>Exam ${index + 1}</td>
+                <td>${maths}</td>
+                <td>${english}</td>
+                <td>${tamil}</td>
+                <td>${total}</td>
+            </tr>
+        `;
     });
 
     html += "</table>";
@@ -143,7 +134,7 @@ function loadExam(examIndex) {
 }
 
 /* -----------------------------
-   MAIN BOOTSTRAP
+   MAIN INIT
 ------------------------------*/
 async function init() {
     const data = await fetchSheet();
@@ -151,13 +142,6 @@ async function init() {
 
     window.DATA = data;
     window.BLOCKS = detectExamBlocks(data.cols);
-
-    if (window.BLOCKS.length === 0) {
-        alert("No exam blocks detected. Check if columns contain: Emis No ... Total");
-        return;
-    }
-
-    renderExamButtons(window.BLOCKS);
 }
 
 init();
